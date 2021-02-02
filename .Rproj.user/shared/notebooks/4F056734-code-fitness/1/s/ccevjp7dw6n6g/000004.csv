@@ -1,0 +1,6 @@
+"0",""
+"0",""
+"0","# Identify outliers by groups"
+"0","mycelium1 %>%"
+"0","  group_by(tri) %>%"
+"0","  identify_outliers(mgr) # There were no extreme outliers."

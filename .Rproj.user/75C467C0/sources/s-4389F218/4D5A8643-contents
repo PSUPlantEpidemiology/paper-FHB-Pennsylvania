@@ -1,0 +1,1284 @@
+% Code
+
+## Load packages
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(readxl)
+library(ggthemes)
+library(janitor)
+library(patchwork)
+library(cowplot)
+library(dplyr)
+library(car)
+library(lme4)
+library(broom)
+library(agricolae)
+library(lattice)
+library(emmeans)
+library(scales)
+library(multcompView)
+
+
+
+library(ggjoy)
+library(drc)
+library(ggpubr)
+library(rstatix)
+library(ec50estimator)
+library(effsize)
+
+
+```
+
+
+
+## Customize ggplot themes
+
+```{r}
+my_theme1 <- theme_bw() +
+  theme(
+   axis.line.x = element_line(color = "black", size = 0.5),
+    axis.line.y = element_line(color = "white", size = 1),
+    panel.border = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(hjust = 0.5))
+
+
+
+my_theme2 <- theme_bw() +
+  theme(
+    legend.position = "none",
+   axis.line.x = element_line(color = "black", size = 0.5),
+    axis.line.y = element_line(color = "white", size = 1),
+    panel.border = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(hjust = 0.5))my_theme2 <- theme_bw() +
+  theme(
+    legend.position = "none",
+   axis.line.x = element_line(color = "black", size = 0.5),
+    axis.line.y = element_line(color = "white", size = 1),
+    panel.border = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(hjust = 0.5))
+
+
+
+my_theme3 <- theme_bw() +
+  theme(
+    legend.position = "none",
+    axis.line.x = element_line(color = "black", size = 0.5),
+    axis.line.y = element_line(color = "white", size = 1),
+    panel.border = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank())
+
+```
+
+
+
+## Plot frequencia
+
+```{r}
+freq_spe<- read_excel("data/sequencing_frq.xlsx")
+
+
+freq_spe %>%
+  ggplot(aes(x = Species, y = freq)) +
+  geom_col(
+    aes(color = Species, fill = Species),
+    stat = "identity", position = position_dodge(0.8),
+    width = 0.7
+    ) +
+scale_fill_brewer(palette = "Paired")+
+  scale_color_brewer(palette = "Paired")+
+ theme_light() +
+  labs(x = "", 
+       y = "Number of isolates", 
+       fill = "", title = "")+
+   #scale_y_continuous(expand = c(0, 0), limits = c(0, 10)) +
+  my_theme2+
+ggsave("plots/Fig_freq_seq.png", width = 4, height = 4, dpi = 300)
+
+
+
+
+ggplot(freq_spe, aes(x = Species, y = freq)) +
+  geom_bar(
+    aes(color = Species, fill = Species),
+    stat = "identity", position = position_dodge(0.8),
+    width = 0.7
+    ) + scale_color_manual(values = c("#0073C2FF", "#EFC000FF"))+
+  scale_fill_manual(values = c("#0073C2FF", "#EFC000FF")) + 
+  geom_text(
+  aes(label = counts, group = specie), 
+  position = position_dodge(0.8),
+  vjust = -0.3, size = 3.5
+)+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=12)) +
+  theme(legend.text=element_text(size=12)) +
+  labs(x = "", y = "Frequency")+
+  theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))+
+  ylim(0, 50) +
+  theme(legend.title = element_blank())
+ 
+ggsave("plots/Fig2.png", width = 7, height = 4, dpi = 300)
+
+```
+
+
+## Read data from XLSX
+
+```{r}
+tri <- read_excel("data/data.xlsx") %>% 
+              filter(tri!="NA",
+                     tri!="NB",
+                     year!="2012") 
+
+# using read_excel to deal better with encoding format
+
+```
+
+#
+
+
+```{r}
+Fig1A <- tri %>%
+  filter(year == "2018") %>%
+  tabyl(county, tri) %>% 
+  gather(tri, n, 2:4) %>% 
+  ggplot(aes(county, n, fill = tri))+
+    geom_col()+
+scale_fill_brewer(palette = "Paired")+
+ theme_light()+
+  labs(x = "County", 
+       y = "Number of isolates", 
+       fill = "", 
+       title = "2018 (n = 307)")+
+   scale_y_continuous(expand = c(0, 0), limits = c(0, 180)) +
+  my_theme1
+
+Fig1A
+
+
+# GRID TRI
+Fig1A_none <- Fig1A +
+  theme(legend.position = "none")+
+   my_theme2
+
+leg_with <- get_legend(Fig1A) # omit legend
+
+
+```
+
+
+##### 2019
+
+```{r}
+tri %>% 
+  filter(year == "2019") %>%
+  tabyl(county, tri) 
+```
+
+
+```{r}
+Fig1B <- tri %>%
+  filter(year == "2019") %>%
+  tabyl(county, tri) %>% 
+  gather(tri, n, 2:3) %>% 
+  ggplot(aes(county, n, fill = tri))+
+    geom_col()+
+scale_fill_brewer(palette = "Paired")+
+ theme_light()+
+  labs(x = "County", 
+       y = "Number of isolates", 
+       fill = "", title = "2019 (n = 102)")+
+   scale_y_continuous(expand = c(0, 0), limits = c(0, 40)) +
+  my_theme2
+
+Fig1B
+
+
+```
+
+### Figure 1
+
+Combine plots and produce the figure
+
+```{r message=FALSE, warning=FALSE}
+plot_grid(Fig1A_none, Fig1B, leg_with, ncol = 3, rel_widths = c(1, 1, 0.3), rel_heights = c(1, 1, 1), labels = c("A", "B"))
+ggsave("plots/Fig_1.png", width = 8, height = 4, dpi = 300)
+```
+
+
+
+
+
+
+
+
+
+## Read data from XLSX - overwintered residue data
+
+```{r}
+residue <- read_excel("data/data_residue.xlsx") 
+
+# using read_excel to deal better with encoding format
+```
+
+
+##### Host
+
+```{r}
+residue %>%  
+  tabyl(county, tri) 
+
+```
+
+
+### All trichothecenes genotypes per county
+
+```{r}
+Fig2 <- residue %>%
+  group_by(county) %>% 
+  tabyl(county, tri) %>%  
+  gather(tri, n, 2) %>% 
+    ggplot(aes(reorder(county, n),n, label = n))+
+  scale_fill_brewer(palette = "Paired")+
+    geom_col(fill = "#ffcc99", color = "black", size = 0.5)+
+   coord_flip()+
+  theme(axis.text.x=element_text(face="italic"))+
+      geom_text(position = position_dodge(width = 1),
+            hjust = 0) +
+  labs(x = "", y = "Number of strains")+
+  scale_y_continuous( limits = c(0, 18)) +
+  my_theme3
+
+Fig2
+
+```
+
+
+
+## FHB severity data
+
+```{r}
+sev <- read_excel("data/data_complete.xlsx") %>% 
+       filter(sev!="NA") %>%
+       mutate(year = as.character(year))
+
+```
+
+
+##### FHB severity in 2018 season
+
+```{r}
+sev_2018 <- sev %>%
+  filter(sev!="NA",
+         year!="2019") %>%
+  group_by(year, county) %>%
+  mutate(sev = as.numeric(sev)) %>% 
+  summarise(mean_sev = mean(sev))
+
+
+
+sev_2018 <- sev %>%
+  filter(sev!="NA",
+  group_by(year, county, trial) %>%
+  mutate(sev = as.numeric(sev)) %>% 
+  summarise(mean_sev = mean(sev))
+
+
+
+sev_2018_all <- sev %>%
+  filter(sev!="NA",
+         year!="2019") 
+ 
+
+summary(sev_2018_all$sev)
+summary(sev_2018_all$trial)
+
+
+
+sev_2019 <- sev %>%
+  filter(sev!="NA",
+         year!="2018") %>%
+  group_by(year, county) %>%
+  mutate(sev = as.numeric(sev)) %>% 
+  summarise(mean_sev = mean(sev))
+
+
+sev_2019_all <- sev %>%
+  filter(sev!="NA",
+         year!="2018") 
+ 
+
+summary(sev_2019_all$sev)
+
+
+
+
+level_2018 <- c("Lancaster","York", "Centre" ,"Armstrong","Potter", "Tioga") #this vector might be useful for other plots/analyses
+
+
+Fig_2 <- sev %>%
+  filter(sev!="NA",
+         year!="2019") %>%
+  group_by(county) %>% 
+ggplot(aes(x = factor(county, level = level_2018), y=sev)) +
+  geom_jitter(size = 1.7, alpha = 0.1, colour = "black", width = 0.1) +
+   geom_boxplot(aes(group = county), width = 0.3, size = 1.0, fill = NA, outlier.colour = NA) +
+   labs(x = "Location", 
+       y = "FHB severity (%)", 
+       fill = "", title = "2018") +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 102)) +
+    my_theme2
+
+Fig_2
+
+
+
+sev_2019 <- sev %>%
+  filter(sev!="NA",
+         year!="2018") %>%
+  group_by(year, county) %>%
+  mutate(sev = as.numeric(sev)) %>% 
+  summarise(mean_sev = mean(sev))
+ 
+sev_2019
+
+
+level_2019 <- c("Lancaster", "Centre", "Potter", "Crawford", "Erie") #this vector might be useful for other plots/analyses
+
+
+Fig_3 <- sev %>%
+  filter(sev!="NA",
+         year!="2018") %>%
+  group_by(county) %>% 
+ggplot(aes(x = factor(county, level = level_2019), y=sev)) +
+  geom_jitter(size = 1.7, alpha = 0.1, colour = "black", width = 0.1) +
+   geom_boxplot(aes(group = county), width = 0.3, size = 1.0, fill = NA, outlier.colour = NA) +
+   labs(x = "Location", 
+       y = "FHB severity (%)", 
+       fill = "", title = "2019") +
+   scale_y_continuous(expand = c(0, 0), limits = c(0, 102)) +
+    my_theme2
+
+Fig_3
+
+```
+
+
+### Figure 2
+
+Combine plots and produce the figure
+
+```{r message=FALSE, warning=FALSE}
+plot_grid(Fig_2, Fig_3, labels = c("A", "B"))
+ggsave("plots/Fig_2.png", width = 8, height = 4, dpi = 300)
+```
+
+
+## FHB data
+
+```{r}
+sev_all <- read_excel("data/data_complete.xlsx") %>% 
+       filter(sev!="NA") %>%
+       mutate(year = as.character(year))
+```
+
+
+##### Mixed Model - Influence of year and county on FHB severity (%)
+
+
+Now we fit the mixed model using `lmer` function. We treat `Isolate` as a random effects.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+library(lme4)
+lmm_sev <- lmer(
+  sev ~ year * region + (1 | trial),
+  data = sev_all, REML = FALSE
+)
+```
+
+
+Let's check the single and interaction effects using `Anova` function of the `car` package.
+
+```{r message=FALSE, warning=FALSE}
+library(car)
+Anova(lmm_sev)
+
+anova(lmm_sev)
+
+summary(lmm_sev)
+
+
+contrast(lsmeans(lmm_sev, "region"), "poly")
+
+contrast(lsmeans(lmm_sev, "year"), "poly")
+
+```
+
+
+Evaluate the model
+
+```{r}
+plot(lmm_sev, type = c("p", "smooth"), col = "black")
+qqmath(lmm_sev, id = 0.05, col = "black")
+```
+
+
+#### Means comparison
+
+Not too bad. Let's now compare the means of treatments and create a dataframe which will be use to further create a plot with the estimated means and confidence interval. We will use the `emmeans` package which is an update for the old `lsmeans` package. The syntax is the same as before. 
+
+```{r message=FALSE, warning=FALSE}
+library(emmeans)
+CLD(emmeans(lmm_sev, ~ year * region))
+
+```
+
+
+
+
+
+
+
+
+```{r}
+library(lme4)
+
+
+
+
+# null model
+mix_sev <- lmer(sev ~ 1 + (1 | trial), data = sev_all, REML = F)
+
+# random intercept and slopes
+mix_sev1 <- lmer(sev ~ region + (1 | trial), data = sev_all, REML = F)
+
+mix_sev2 <- lmer(sev ~ year + (1 | trial), data = sev_all, REML = F)
+
+# random slopes
+mix_sev3 <- lmer(sev ~ region + year + (1 | trial), data = sev_all, REML = F)
+
+mix_sev4 <- lmer(sev ~ region * year + (1 | trial), data = sev_all, REML = F)
+
+AIC(mix_sev, mix_sev1, mix_sev2, mix_sev3, mix_sev4)
+
+anova(mix_sev1, mix_sev3, test = "Chisq")
+anova(mix_sev1, mix_sev4, test = "Chisq")
+anova(mix_sev3, mix_sev4, test = "Chisq")
+
+# Anova
+Anova(mix_sev1)
+
+# Anova
+Anova(mix_sev4)
+
+# Summary
+summary(mix_sev4)
+
+# Summary
+summary(mix_sev)
+
+coef(mix_sev1)
+
+library(nlme)
+
+mod6 = gls(sev ~ region * year, data=sev_all, method="REML")  
+   
+Anova(mod6, type=c("III"))  
+   
+ summary(mod6)  
+ 
+ lme1 = lme(sev ~ region * year, random= ~1|trial, data=sev_all) 
+summary(lme1)
+
+Anova(lme1, type=c("III"))
+
+anova(lme1, mod6) 
+
+lme2 = lme(sev ~ region * year, random= ~year|trial, data=sev_all)  
+   
+ summary(lme2)  
+   
+ Anova(lme2, type=c("III"))  
+ 
+ anova(lme1, lme2) 
+ 
+ hist(sev_all$sev) 
+ 
+ pois.mod = glm(sev ~ region*year, data=sev_all, family=c("poisson")) 
+ 
+ summary(pois.mod)
+ 
+ pois.mod2 = glm(y ~ block + spray*lead, data=dat, family=c("poisson")) 
+ 
+ mean(sev_all$sev)  
+
+ var(sev_all$sev)  
+ 
+  pois.mod3 = glm(sev ~ region*year, data=sev_all, family=c("quasipoisson")) 
+
+  summary(pois.mod3)
+```
+
+
+##### Mixed Model - Influence of year and county on FHB severity (%) - 2018
+
+
+```{r}
+library(lme4)
+
+
+sev_all_2018_t <- read_excel("data/data_complete.xlsx") %>% 
+       filter(sev!="NA",
+              year!="2019")
+
+# null model
+mix_sev <- lmer(sev ~ 1 + (1 | trial), data = sev_all_2018_t, REML = F)
+
+# random intercept and slopes
+mix_sev1 <- lmer(sev ~ region + (1 | trial), data = sev_all_2018_t, REML = F)
+
+
+AIC(mix_sev, mix_sev1)
+
+anova(mix_sev, mix_sev1, test = "Chisq")
+
+# Anova
+Anova(mix_sev1)
+
+# Summary
+summary(mix_sev1)
+
+coef(mix_sev1)
+
+```
+
+
+
+
+Here we can check which model best fitted the data based on the lowest AIC, which was the one with both intercepts and slopes as random effects.
+
+```{r, message=FALSE, warning=FALSE}
+AIC(mix_sev, mix_sev1, mix_sev2, mix_sev3, mix_sev4)
+```
+
+
+
+
+```{r}
+anova(mix_sev1, mix_sev3, test = "Chisq")
+anova(mix_sev1, mix_sev4, test = "Chisq")
+anova(mix_sev3, mix_sev4, test = "Chisq")
+
+```
+
+
+
+```{r, message=FALSE, warning=FALSE}
+# Anova
+Anova(mix_sev1)
+
+# Summary
+summary(mix_sev1)
+
+coef(mix_sev4)
+
+
+
+
+
+summary(mix_sev4)
+
+
+library(emmeans)
+CLD(emmeans(mix_sev4, ~ region * year))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+
+
+# Summarizing data
+
+## Severity information
+
+dat_sev <- dat %>% 
+  group_by(trial) %>% 
+  filter(sev!="NA")
+  
+cont_sev <- filter(dat_sev, row_number()==1)
+nrow(cont_sev) # 21 trials with FHB severity information
+
+
+## Trichothecene genotype information
+
+dat_tri <- dat %>% 
+  group_by(trial) %>% 
+  filter(tri!="NA")
+  
+cont_tri <- filter(dat_tri, row_number()==1)
+nrow(cont_tri) # 18 trials with the trichothecene genotype information
+
+
+## Previous crop
+
+dat_crop <- dat %>% 
+  group_by(trial) %>% 
+  filter(mix_crop!="NA")
+  
+cont_crop <- filter(dat_crop, row_number()==1)
+nrow(cont_crop) # 19 trials with the previous crop rotation information
+
+```
+
+
+## Mixed Model - Influence of crop rotation 
+
+```{r}
+
+sev_crop <- dat %>% 
+  group_by(trial) %>% 
+  mutate(inc = as.numeric(inc),
+         sev = as.numeric(sev)) %>% 
+  filter(sev!="NA",
+         mix_crop!="NA") 
+
+sev_crop_all <- filter(sev_crop, row_number()==1)
+nrow(sev_crop_all) # 18 trials with the FHB severity and previous crop rotation information
+
+
+## Usar todos os fatores como sendo aleatorios
+
+mix_crop <- lmer(sev ~ mix_crop + (1| mix_crop), data=sev_crop, REML=F)
+
+mix_crop1 <- lmer(sev ~ 1 + (1|trial), data=sev_crop, REML=F)
+
+mix_crop2 <- lmer(sev ~ 1 + (1|trial) + (1|mix_crop), data=sev_crop, REML=F)
+
+mix_crop3 <- lmer(sev ~ 1 + (1|trial) + (1|mix_crop) + (1|region), data=sev_crop, REML=F)
+
+mix_crop4 <- lmer(sev ~ mix_crop + region + (1|trial) + (1|region), data=sev_crop, REML=F)
+
+mix_crop5 <- lmer(sev ~ mix_crop * region + (1 | trial), data=sev_crop, REML=F)
+
+
+## AIC
+AIC(mix_crop, mix_crop1, mix_crop2, mix_crop3, mix_crop4, mix_crop5)
+
+## anova
+anova(mix_crop4, mix_crop5, test = "Chisq")
+
+# Anova
+Anova(mix_crop5)
+
+summary(mix_crop5)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+## Frequency table - TrI vs. YEAR
+
+```{r}
+tri <- read_excel("data/FHB_2018_2019_complete.xlsx") %>% 
+  filter(tri!="NA",
+         tri!="NB")
+
+
+freq_year <- table(tri$season, tri$tri)
+freq_year
+margin.table(freq_year,1) 
+margin.table(freq_year,2) 
+margin.table(freq_year)
+
+## Chi test
+chisq.test(freq_year)
+
+## Fisher’s exact test
+test <- fisher.test(freq_year)
+test
+
+# Gmodels
+CrossTable(tri$season, tri$tri, digits=2, expected=T, fisher=T)
+
+## Frequency of trichothecene genotype did not differ across growing season. 
+
+
+```
+
+
+
+## Frequency table - TrI vs. County
+
+```{r}
+tri <- read_excel("data/FHB_2018_2019_complete.xlsx") %>% 
+  filter(tri!="NA",
+         tri!="NB")
+
+
+freq_county <- table(tri$Location, tri$tri)
+freq_county
+margin.table(freq_county,1) 
+margin.table(freq_county,2) 
+margin.table(freq_county)
+
+## Chi test
+chisq.test(freq_county)
+
+## Fisher’s exact test
+test <- fisher.test(freq_county)
+test
+
+
+# Gmodels
+CrossTable(tri$Location, tri$tri, digits=2, expected=T, fisher=T)
+
+## Frequency of trichothecene genotype did not differ across growing season. 
+
+```
+
+
+
+## Frequency table - TrI vs. Management Region
+
+```{r}
+tri <- read_excel("data/FHB_2018_2019_complete.xlsx") %>% 
+  filter(tri!="NA",
+         tri!="NB")
+
+
+freq_region <- table(tri$Region, tri$tri)
+freq_region
+margin.table(freq_region,1) 
+margin.table(freq_region,2) 
+margin.table(freq_region)
+
+## Chi test
+chisq.test(freq_region)
+
+# Gmodels
+CrossTable(tri$Region, tri$tri, digits=2, expected=T, fisher=T)
+
+## Frequency of trichothecene genotype did not differ across growing season. 
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+## Contingency table 
+
+```{r}
+
+??midasr
+
+dat_new <- data.frame(tri$trial,tri$Location, tri$season, tri$tri)
+
+attach(dat_new)
+
+table1<-table(tri.Location, tri.tri)
+
+margin.table(table1,1) #soma as frequencias dentro de ano
+margin.table(table1,2) #soma os casos dentro do estado
+margin.table(table1) #soma todos os casos
+
+
+prop.table(table1) #casos em proporcao (de todos os anos, em todos os estados, soma=1)
+prop.table(table1,1) # row percentages 
+prop.table(table1,2) # column percentages
+
+
+
+table(tri$Location, tri$tri)
+
+# Funcao do pacote gmodels
+library(gmodels)
+CrossTable(tri$Location, tri$tri)
+CrossTable(tri$Location, tri$tri, digits=3, expected=T, fisher=T)
+
+
+
+library(janitor) # for data cleaning and summary
+
+tri_freq = tri %>%
+  tabyl(trial, tri) %>%
+  adorn_totals("row") %>%
+  adorn_percentages("row") %>%
+  adorn_pct_formatting() 
+
+# %>%
+#   adorn_ns() %>%
+#   adorn_title("combined")
+
+freq_trial = data.frame(tri_freq)
+freq_trial
+
+freq_trial <- freq_trial %>% 
+  rename("15-ADON" = "X15.ADON",
+         "3-ADON" = "X3.ADON")
+
+# freq_tri <- freq_trial %>%
+#     gather("tri", "percentage", 2:4)
+
+# Export file
+
+
+write.csv(freq_trial, "data/freq_trial.csv")
+
+```
+
+
+
+## Import new data
+
+```{r}
+freq_new <- read_excel("data/data_freq.xlsx")
+
+
+# Funcao do pacote gmodels
+library(gmodels)
+CrossTable(year, state)
+CrossTable(year, state, digits=3, expected=T, fisher=T)
+
+test <- chisq.test(freq_new)
+summary(test)
+
+test$p.value # p-value
+
+test$expected
+
+
+library(gmodels)
+CrossTable(tri$tri, tri$trial)
+CrossTable(tri$tri, tri$trial, digits=3, expected=T, fisher=T)
+
+
+?chisq.test
+```
+
+
+## Mixed-effects model
+
+```{r}
+
+freq_tt <- read_excel("data/freq_tri_trial.xlsx")
+
+str(freq_tt)
+
+freq_tt$season <- as.character(freq_tt$season)
+
+# null model
+mix_yld  <- lmer(percentage ~ 1 + ( 1 |trial), data=freq_tt, REML=F)
+
+# random intercept and slopes
+mix_yld1  <- lmer(percentage ~ tri*season*county + (1|trial), data=freq_tt, REML=F)
+
+
+AIC(mix_yld, mix_yld1)
+anova(mix_yld, mix_yld1)
+
+Anova(mix_yld1)
+
+summary(mix_yld1)
+
+
+```
+
+
+
+
+
+
+## Mixed-effects model
+
+```{r}
+# null model
+mix_yld  <- lmer(tri ~ 1 + ( 1 |trial), data=tri, REML=F)
+
+
+# random intercept and slopes
+mix_yld1  <- lmer(yld ~ inc + (inc |study), data=dat_yld, REML=F)
+
+# random slopes
+mix_yld2 <- lmer(yld ~ inc + (1 | inc), data=dat_yld, REML=F)
+
+# random intercepts
+mix_yld3 <- lmer(yld ~ inc + (1 |study), data=dat_yld, REML=F)
+```
+
+
+
+## Import data - Filter per Trichothecene
+
+```{r}
+tri <- dat %>% 
+  filter(tri!="NA",
+         tri!="NB")
+
+nrow(tri)
+
+# 2018
+
+tri_15adon_2018 <- tri %>%
+ filter(season!="2019",
+        tri!="3-ADON",
+        tri!="NB",
+        tri!="NIV")
+
+nrow(tri_15adon_2018)
+
+
+# Export file
+write.csv(tri_15adon_2018, "data/15-adon.csv")
+
+
+tri_3adon_2018 <- tri %>%
+ filter(season!="2019",
+        tri!="15-ADON",
+        tri!="NB",
+        tri!="NIV")
+
+nrow(tri_3adon_2018)
+
+# Export file
+write.csv(tri_3adon_2018, "data/3-adon.csv")
+
+
+
+
+tri_niv_2018 <- tri %>%
+ filter(season!="2019",
+        tri!="15-ADON",
+        tri!="3-ADON",
+        tri!="NB")
+
+nrow(tri_niv_2018)
+
+
+# 2019
+
+tri_15adon_2019 <- tri %>%
+ filter(season!="2018",
+        tri!="3-ADON",
+        tri!="NB",
+        tri!="NIV")
+
+nrow(tri_15adon_2019)
+
+tri_3adon_2019 <- tri %>%
+ filter(year!="2018",
+        tri_2!="15-ADON",
+        tri_2!="NB",
+        tri_2!="NIV")
+
+nrow(tri_3adon_2019)
+
+
+tri_niv_2019 <- tri %>%
+ filter(year!="2018",
+        tri_2!="15-ADON",
+        tri_2!="3-ADON",
+        tri_2!="NB")
+
+nrow(tri_niv_2019)
+
+```
+
+
+## FHB severity (%) MAP - 2019
+
+```{r}
+
+pa_inf<- read.csv("data/pa_county.csv", header = T, sep = ",")
+
+df1_2 <- data.frame(
+  county = c("Centre", "Lancaster", "Potter", "Crawford", "Erie", "Lebanon"),
+  long = c( -77.64151,-75.93410, -78.04831, -79.7, -79.7, -76.54715729),
+  lat = c( 40.74876, 40.04975, 41.5, 41.7, 42.0, 40.55395126))
+
+liibrary(rnatural)
+map_2019 <- pa_inf %>%
+  ggplot() +
+  geom_polygon(aes(long, lat, group = group),color = "grey85", alpha=1) +
+  scale_fill_distiller(direction = 1,
+                       na.value = "white",
+                       palette = "Greens") +
+  theme(legend.position = "none") +
+  geom_label(data=df1_2, aes(long, lat, label = county), size=4)+
+  coord_map() +
+  labs(fill = "FHB severity (%)")+ 
+  labs(x = "Longitude", y = "Latitude")+
+  theme(axis.text=element_text(size=12)) + 
+  theme(legend.text=element_text(size=12))+
+   ggtitle("")+
+  theme(plot.title = element_text(hjust = 0.5))+
+   theme(plot.title = element_text(size = 14))+
+       theme(plot.title = element_text(size=20, face="bold"))
+
+plot_grid(map_2018, map_2019, ncol = 2, align = "h", labels = c("A", "B"))
+
+ggsave("plots/map_2019.png", width = 12, height = 4, dpi = 300)
+
+grid_reg <- plot_grid(reg3_high, reg3_low, ncol = 2, labels = c("A", "B"), align = "h", rel_widths = c(1,1), rel_heights=c(1,1), label_size = 12) +
+  ggsave("plots/Fig_2_reg.png", width=10, height=5)
+
+
+
+
+ggsave("plots/grid_1.png", width=12, height=10)
+
+
+```
+
+
+
+
+
+## County
+
+```{r}
+
+## Lancaster
+
+lanc_15adon <- tri_15adon %>% 
+ filter(location == "Lancaster")
+
+nrow(lanc_15adon)
+
+lanc_3adon <- tri_3adon %>% 
+ filter(location == "Lancaster")
+
+nrow(lanc_3adon)
+
+lanc_niv <- tri_niv %>%
+   filter(location == "Lancaster")
+
+nrow(lanc_niv)
+
+lanc_nb <- nb %>%
+   filter(location == "Lancaster")
+
+nrow(lanc_nb)
+
+## York
+
+york_15adon <- tri_15adon %>% 
+ filter(location == "York")
+
+nrow(york_15adon)
+
+york_3adon <- tri_3adon %>% 
+ filter(location == "York")
+
+nrow(york_3adon)
+
+
+york_niv <- tri_niv %>%
+   filter(location == "York")
+
+nrow(york_niv)
+
+york_nb <- nb %>%
+   filter(location == "York")
+
+nrow(york_nb)
+
+
+## Armstrong
+
+arms_15adon <- tri_15adon %>% 
+ filter(location == "Armstrong")
+
+nrow(arms_15adon)
+
+arms_3adon <- tri_3adon %>% 
+ filter(location == "Armstrong")
+
+nrow(arms_3adon)
+
+arms_niv <- tri_niv %>%
+   filter(location == "Armstrong")
+
+nrow(arms_niv)
+
+arms_nb <- nb %>%
+   filter(location == "Armstrong")
+
+nrow(arms_nb)
+
+
+## Centre
+
+cent_15adon <- tri_15adon %>% 
+ filter(location == "Centre")
+
+nrow(cent_15adon)
+
+cent_3adon <- tri_3adon %>% 
+ filter(location == "Centre")
+
+nrow(cent_3adon)
+
+cent_niv <- tri_niv %>%
+   filter(location == "Centre")
+
+nrow(cent_niv)
+
+cent_nb <- nb %>%
+   filter(location == "Centre")
+
+nrow(cent_nb)
+
+## Potter
+
+pot_15adon <- tri_15adon %>% 
+ filter(location == "Potter")
+
+nrow(pot_15adon)
+
+pot_3adon <- tri_3adon %>% 
+ filter(location == "Potter")
+
+nrow(pot_3adon)
+
+pot_niv <- tri_niv %>%
+   filter(location == "Potter")
+
+nrow(pot_niv)
+
+pot_nb <- nb %>%
+   filter(location == "Potter")
+
+nrow(pot_nb)
+
+## Tioga
+
+tio_15adon <- tri_15adon %>% 
+ filter(location == "Tioga")
+
+nrow(tio_15adon)
+
+tio_3adon <- tri_3adon %>% 
+ filter(location == "Tioga")
+
+nrow(tio_3adon)
+
+tio_niv <- tri_niv %>%
+   filter(location == "Tioga")
+
+nrow(tio_niv)
+
+tio_nb <- nb %>%
+   filter(location == "Tioga")
+
+nrow(tio_nb)
+
+## Lebanon
+
+leb_15adon <- tri_15adon %>% 
+ filter(location == "Lebanon")
+
+nrow(leb_15adon)
+
+leb_3adon <- tri_3adon %>% 
+ filter(location == "Lebanon")
+
+nrow(leb_3adon)
+
+leb_niv <- tri_niv %>%
+   filter(location == "Lebanon")
+
+nrow(leb_niv)
+
+leb_nb <- nb %>%
+   filter(location == "Lebanon")
+
+nrow(leb_nb)
+
+
+```
+
+
+
+```{r}
+## Frequence of trichothecene genotype per county
+
+freq_tri<- read_excel("data/FHB_2018_2019_complete.xlsx", sheet = "freq") %>% 
+  filter(tri!="Unidentified")
+
+
+ggplot(freq_tri, aes(x = location, y = counts)) +
+  geom_bar(
+    aes(color = tri, fill = tri),
+    stat = "identity", position = position_dodge(0.8),
+    width = 0.7
+    ) +
+  #scale_color_manual(values = c("#0073C2FF", "#EFC000FF"))+
+  #scale_fill_manual(values = c("#0073C2FF", "#EFC000FF")) + 
+  geom_text(
+  aes(label = counts, group = tri), 
+  position = position_dodge(0.8),
+  vjust = -0.3, size = 3.5
+)+
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=10)) + 
+  theme(legend.text=element_text(size=10)) +
+  labs(x = "", y = "Frequency")+
+  theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))+
+  ylim(0,120) +
+  theme(legend.title = element_blank())
+ 
+ggsave("plots/Fig1.png", width = 7, height = 4, dpi = 300)
+
+```
+
+
+## Read data from XLSX
+
+```{r}
+corn <- read_excel("data/test_corn.xlsx") %>% 
+       filter(Fus_ID!="NA",
+              Fus_ID!="Not Fus.") 
+# using read_excel to deal better with encoding format
+```
+

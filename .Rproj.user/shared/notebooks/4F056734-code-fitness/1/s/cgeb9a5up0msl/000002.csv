@@ -1,0 +1,4 @@
+"0",""
+"0","ascospore1 <- ascospore %>%"
+"0","  group_by(experiment, isolate, tri, location, region, crop, rep) %>% summarize(ascospore = mean(conc_spores)) "
+"0",""

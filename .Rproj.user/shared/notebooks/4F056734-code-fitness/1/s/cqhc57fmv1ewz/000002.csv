@@ -1,0 +1,6 @@
+"0","## Tebuconazole"
+"0","ec50_teb <- ec50 %>%"
+"0","  filter(fungicide ==""Tebuconazole"")"
+"0",""
+"0","ec50_teb %>%"
+"0","  get_summary_stats(Estimate, type = ""full"")"

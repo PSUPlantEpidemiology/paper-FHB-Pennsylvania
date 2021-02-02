@@ -1,0 +1,6 @@
+"0",""
+"0",""
+"0","# Check normality by groups"
+"0","ascospore1 %>%"
+"0","  group_by(tri) %>%"
+"0","  shapiro_test(ascospore) # Data of the two groups are not normally distributed."

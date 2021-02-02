@@ -1,0 +1,11 @@
+"0","library(tidyverse)"
+"0","library(readxl)"
+"0","library(cowplot)"
+"0","library(janitor)"
+"0","install.packages(""geom_joy"")"
+"2","WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+"
+"0","fhb_spe1<- read_excel(""data/freq_tri.xlsx"")"
+"0",""

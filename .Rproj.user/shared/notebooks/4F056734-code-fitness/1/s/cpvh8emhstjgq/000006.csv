@@ -1,0 +1,6 @@
+"0","col <- colorRampPalette(c(""#BB4444"", ""#EE9988"", ""#FFFFFF"", ""#77AADD"", ""#4477AA""))"
+"0",""
+"0",""
+"0",""
+"0",""
+"0","png(height=2000, width=2500, file=""figures/corr1.png"", res = 300)"

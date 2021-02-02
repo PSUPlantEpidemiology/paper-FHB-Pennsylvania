@@ -1,0 +1,9 @@
+"0",""
+"0","grid2 <- plot_grid(plot_fungicide, biplot, labels=c('A', 'B'), align = ""hv"") +"
+"0","  "
+"0","ggsave(""figures/grid2.png"", width=10, height=4, dpi=300)"
+"2","Picking joint bandwidth of 0.0315
+"
+"2","Graphs cannot be vertically aligned unless the axis parameter is set. Placing graphs unaligned."
+"0","grid2"
+"0",""

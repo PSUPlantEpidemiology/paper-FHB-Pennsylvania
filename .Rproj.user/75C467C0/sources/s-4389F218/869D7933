@@ -1,0 +1,32 @@
+{
+    "id": "869D7933",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1608238135014.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "expression": "fhb_spe1",
+        "caption": "fhb_spe1",
+        "totalObservations": 538,
+        "displayedObservations": 538,
+        "variables": 54,
+        "cacheKey": "A7CB6375",
+        "object": "fhb_spe1",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=fhb_spe1&cache_key=A7CB6375&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1557617325072,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1608238135014,
+    "read_only": false,
+    "read_only_alternatives": []
+}

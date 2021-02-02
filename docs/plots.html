@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>plots.utf8</title>
+
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">FHB pathogens in PA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa fa fa-home"></span>
+     
+    About
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa fa fa-file-code-o"></span>
+     
+    Documented analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="code-species.html">FHB species</a>
+    </li>
+    <li>
+      <a href="code-fitness.html">Multivariate analysis</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="plots.html">
+    <span class="fas fa-bar-chart"></span>
+     
+    Publication-ready plots
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+
+</div>
+
+
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, warning = FALSE)</code></pre>
+<div id="import-data" class="section level1">
+<h1>Import Data</h1>
+<pre class="r"><code>library(tidyverse)
+library(readxl)
+library(cowplot)
+library(janitor)
+
+fhb_spe1&lt;- read_excel(&quot;data/freq_tri.xlsx&quot;)</code></pre>
+<div id="saprophytic-fitness" class="section level2">
+<h2>Saprophytic fitness</h2>
+<div id="mycelium-growth" class="section level3">
+<h3>Mycelium growth</h3>
+<pre class="r"><code>mycelium &lt;- read_excel(&quot;data/dat-fitness.xlsx&quot;, sheet = &quot;mycelium&quot;) 
+
+# Removing the mycelium plug area 
+mycelium[&quot;day1&quot;] = mycelium[&quot;d1_cm&quot;] -0.283
+mycelium[&quot;day2&quot;] = mycelium[&quot;d2_cm&quot;] -0.283
+
+
+# Estimating the average radial growth rate (cm2 per day)
+mycelium$growth &lt;- (mycelium$day2 - mycelium$day1)
+
+
+# Summarizing the data
+mycelium1 &lt;- mycelium %&gt;%
+  group_by(experiment, isolate, tri, rep) %&gt;% summarize(mgr = mean(growth))
+
+
+plot_mycelium &lt;- mycelium1 %&gt;%  
+  group_by(isolate, tri) %&gt;% 
+  summarise(growth = mean(mgr, na.rm = T)) %&gt;% 
+  ggplot(aes(tri, growth))+
+  geom_boxplot(size = 0.6,
+               outlier.colour = NA, width=0.3
+               ) + 
+  geom_jitter(size = 1.3, width = 0.1,
+              alpha=0.6, aes(color=tri))+
+    facet_grid (~ tri, scales = &quot;free&quot;) +
+  theme_minimal()+ 
+  scale_color_manual(breaks = c(&quot;15ADON&quot;, &quot;3ADON&quot;),  values=c(&quot;#1F78B4&quot;, &quot;#33A02C&quot;))+
+  scale_fill_manual(breaks = c(&quot;15ADON&quot;, &quot;3ADON&quot;),  values=c(&quot;white&quot;, &quot;white&quot;))+
+  theme(legend.position = &quot;none&quot;,
+        plot.margin = unit(c(-0.6, 0.1, -0.2, 0.1), &quot;cm&quot;),
+        legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(-0,-10,-10,-10),
+        panel.grid.major.x = element_blank(), 
+        axis.text.x=element_blank())+
+labs(y = expression(paste(&quot;Mycelium growth &quot; ~ (cm^2))),
+                      x = &quot;&quot;, 
+                      title = &quot;&quot;,
+      color = &quot;&quot;, fill = &quot;&quot;)+
+  ylim(0, 16)
+
+plot_mycelium</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="macroconidia-production" class="section level3">
+<h3>Macroconidia production</h3>
+<pre class="r"><code>conidia &lt;- read_excel(&quot;data/dat-fitness.xlsx&quot;, sheet = &quot;conidia&quot;) 
+
+conidia1 &lt;- conidia %&gt;%
+  group_by(experiment, isolate, tri, rep) %&gt;% summarize(spores = mean(conc_spores))
+
+
+plot_conidia &lt;- conidia1 %&gt;%  
+  group_by(isolate, tri) %&gt;% 
+  summarise(conidia = mean(spores, na.rm = T)) %&gt;% 
+  ggplot(aes(tri, conidia)) +
+  geom_boxplot(size = 0.6,
+               outlier.colour = NA, width=0.3
+               ) + 
+  geom_jitter(size = 1.3, width = 0.1,
+              alpha=0.6, aes(color=tri)) +
+  facet_grid (~ tri, scales = &quot;free&quot;) +
+  theme_minimal() + 
+  scale_color_manual(breaks = c(&quot;15ADON&quot;, &quot;3ADON&quot;),  values=c(&quot;#1F78B4&quot;, &quot;#33A02C&quot;)) +
+  scale_fill_manual(breaks = c(&quot;15ADON&quot;, &quot;3ADON&quot;),  values=c(&quot;white&quot;, &quot;white&quot;)) +
+  theme(legend.position = &quot;none&quot;,
+        plot.margin = unit(c(-0.6, 0.1, -0.2, 0.1), &quot;cm&quot;),
+        legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(-0,-10,-10,-10),
+        panel.grid.major.x = element_blank(), 
+        axis.text.x=element_blank())+
+labs(y = expression(N.~of~macroconidia~x~10 ^ {3}),
+      x = &quot;&quot;, title = &quot;&quot;,
+      color = &quot;&quot;, fill = &quot;&quot;)+
+  ylim(0,60)
+
+plot_conidia</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="ascospore-production" class="section level3">
+<h3>Ascospore production</h3>
+<pre class="r"><code>ascospore &lt;- read_excel(&quot;data/dat-fitness.xlsx&quot;, sheet = &quot;ascospore&quot;) 
+
+ascospore1 &lt;- ascospore %&gt;%
+  group_by(experiment, isolate, tri, location, region, crop, rep) %&gt;% summarize(ascospore = mean(conc_spores)) 
+
+plot_ascospore &lt;- ascospore1 %&gt;%  
+  group_by(isolate, tri) %&gt;% 
+  summarise(ascospore = mean(ascospore, na.rm = T)) %&gt;% 
+  ggplot(aes(tri, ascospore)) +
+  geom_boxplot(size = 0.6,
+               outlier.colour = NA, width=0.3,
+               #position = position_dodge(width = 0.9)
+               ) + 
+  geom_jitter(size = 1.3, width = 0.1,
+              #position=position_jitterdodge(dodge.width=0.9),  
+              alpha=0.6, aes(color=tri))+
+  #scale_fill_grey(start = 1, end = 1)+
+  facet_grid (~ tri, scales = &quot;free&quot;) +
+  theme_minimal()+ 
+  scale_color_manual(breaks = c(&quot;15ADON&quot;, &quot;3ADON&quot;),  values=c(&quot;#1F78B4&quot;, &quot;#33A02C&quot;))+
+  scale_fill_manual(breaks = c(&quot;15ADON&quot;, &quot;3ADON&quot;),  values=c(&quot;white&quot;, &quot;white&quot;))+
+  theme(legend.position = &quot;none&quot;,
+        plot.margin = unit(c(-0.6, 0.1, -0.2, 0.1), &quot;cm&quot;),
+        legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(-0,-10,-10,-10),
+        panel.grid.major.x = element_blank(), 
+        axis.text.x=element_blank())+
+labs(y = expression(N.~of~ascospore~x~10 ^ {3}),
+      x = &quot;&quot;, title = &quot;&quot;,
+      color = &quot;&quot;, fill = &quot;&quot;)+
+  ylim(0,80)
+
+plot_ascospore</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="perithecia-production" class="section level3">
+<h3>Perithecia production</h3>
+<pre class="r"><code>peritecia &lt;- read_excel(&quot;data/dat-fitness.xlsx&quot;, sheet = &quot;perithecia&quot;)
+
+peritecia1 = peritecia %&gt;%
+  gather(&quot;Day 3&quot;, &quot;Day 6&quot;, key = day, value = percentage) %&gt;% 
+  arrange(isolate)
+
+plot_perithecia &lt;- peritecia1 %&gt;%  
+  group_by(isolate, tri, day) %&gt;% 
+  summarise(percentage = mean(percentage, na.rm = T)) %&gt;% 
+  ggplot(aes(x = day,
+             y = percentage,
+             fill = tri)) +
+  geom_boxplot(size = 0.6,
+               outlier.colour = NA, width=0.3,
+               position = position_dodge(width = 0.5)
+               ) + 
+  geom_jitter(position=position_jitterdodge(dodge.width=0.5, jitter.width = 0.1),
+              size=1.3,
+              alpha=0.6, 
+              aes(colour=tri)) +
+  theme_minimal() +
+  scale_color_manual(breaks = c(&quot;15ADON&quot;, &quot;3ADON&quot;), values=c(&quot;#1F78B4&quot;, &quot;#33A02C&quot;))+
+  scale_fill_manual(breaks = c(&quot;15ADON&quot;, &quot;3ADON&quot;), values=c(&quot;white&quot;, &quot;white&quot;)) +
+  labs(y = expression(paste(&quot;Perithecia production (%)&quot;)),
+                      x = &quot;&quot;, 
+                      title = &quot;&quot;,
+      color = &quot;&quot;, fill = &quot;&quot;) +
+  theme(legend.position = &quot;top&quot;,
+        plot.margin = unit(c(-0.6, 0.1, -0.2, 0.1), &quot;cm&quot;),
+        legend.margin=margin(0,0,0,0),
+        legend.box.margin=margin(-0,-10,-10,-10),
+        panel.grid.major.x = element_blank()) 
+
+plot_perithecia</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="fig-1---grid" class="section level3">
+<h3>FIG 1 - GRID</h3>
+<pre class="r"><code>grid1 &lt;- plot_grid(plot_mycelium, plot_conidia, plot_ascospore, plot_perithecia, labels=c(&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;), align = &quot;hv&quot;, ncol=2) +
+  
+ggsave(&quot;figures/grid1.png&quot;,  width=10, height=5, dpi=300)
+
+grid1</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+</div>
+<div id="fig-2---ec50-and-pca" class="section level2">
+<h2>FIG 2 - EC50 and PCA</h2>
+<div id="fungicide" class="section level3">
+<h3>Fungicide</h3>
+<pre class="r"><code>fung &lt;- read_csv(&quot;data/ec50.csv&quot;)
+
+ec50 &lt;- fung %&gt;%
+  select(-X1) 
+
+plot_fungicide &lt;- ec50 %&gt;%  
+  group_by(isolate, tri, fungicide) %&gt;% 
+  summarise(ec50 = mean(Estimate, na.rm = T)) %&gt;% 
+  ggplot(aes(x = ec50, fungicide,  fill = factor(tri))) +
+  geom_joy(scale = 1.5, alpha = 0.3, rel_min_height = 0.001) +
+  geom_jitter(alpha=0.5, height = 0.03, size = 1.5, aes(color = factor(tri)))  +
+  scale_color_manual(breaks = c(&quot;3ADON&quot;, &quot;15ADON&quot;),  values =  c(alpha(&quot;#1F78B4&quot;, 0.5), alpha(&quot;#33A02C&quot;, 0.5))) +
+  scale_fill_manual(breaks = c(&quot;3ADON&quot;, &quot;15ADON&quot;), values = c(alpha(&quot;#1F78B4&quot;, 0.5), alpha(&quot;#33A02C&quot;, 0.5))) +
+  scale_y_discrete(expand = c(0.01, 0.15)) +  
+  scale_x_continuous(expand = c(0, 0)) + 
+  theme_minimal() + 
+  theme(legend.position = c(0.8, 1),
+        #plot.margin = unit(c(0, 0.1, -0.2, 0.1), &quot;cm&quot;),
+        legend.justification = c(&quot;right&quot;, &quot;top&quot;),
+        panel.grid.major.x = element_blank(), 
+        axis.title.x = element_text(hjust=0.5))+
+  labs(x = (expression(paste(&#39;EC&#39;[50], &#39; (&#39;, mu,&#39;g/ml)&#39;))), y = &quot;&quot;, fill = &quot;&quot;, color = &quot;&quot;) 
+
+plot_fungicide</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+</div>
+<div id="pca-analysis" class="section level2">
+<h2>PCA analysis</h2>
+<pre class="r"><code>dat_multivar &lt;- read_csv(&quot;data/dat_multivar.csv&quot;) %&gt;%
+  select(-isolate) %&gt;%
+  select(-X1)
+
+dat_mul_new &lt;- dat_multivar %&gt;%
+  rename(Genotype = tri)
+
+
+
+# Selecting only the dependent variables
+
+dat_multivar_pca &lt;- dat_multivar %&gt;%
+  select(-tri)
+
+res.pca &lt;- PCA(dat_multivar_pca, graph = FALSE)
+
+
+## Graphic
+
+biplot &lt;- fviz_pca_biplot(res.pca,
+                geom.ind = &quot;point&quot;,
+                fill.ind = dat_mul_new$Genotype, #col.ind = &quot;black&quot;,
+                pointshape = 21, 
+                pointsize = &quot;contrib&quot;,
+                mean.point = FALSE, #remove group mean point
+                palette = c(&quot;#1F78B4&quot;, &quot;#33A02C&quot;),
+                addEllipses = TRUE, #ellipse.type = &quot;confidence&quot;,ellipse.level = 0.95,
+                # Variables
+                alpha.var =&quot;contrib&quot;, 
+                invisible = &quot;var&quot;,
+                )+
+  scale_color_manual( values=c(&quot;#1F78B4&quot;, &quot;#33A02C&quot;)) +
+  labs(title = &quot;&quot;, fill = &quot;Genotype&quot;, color = &quot;Genotype&quot;, size = &quot;Contrib.&quot;)
+
+
+biplot</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<div id="fig-2---grid" class="section level3">
+<h3>FIG 2 - GRID</h3>
+<pre class="r"><code>grid2 &lt;- plot_grid(plot_fungicide, biplot, labels=c(&#39;A&#39;, &#39;B&#39;), align = &quot;hv&quot;) +
+  
+ggsave(&quot;figures/grid2.png&quot;, width=10, height=4, dpi=300)</code></pre>
+<pre><code>## Picking joint bandwidth of 0.0318</code></pre>
+<pre class="r"><code>grid2</code></pre>
+<p><img src="plots_files/figure-html/unnamed-chunk-9-1.png" width="2000px" height="400px" /></p>
+</div>
+</div>
+</div>
+
+
+
+Copyright 2020 Maira R. Duffeck
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

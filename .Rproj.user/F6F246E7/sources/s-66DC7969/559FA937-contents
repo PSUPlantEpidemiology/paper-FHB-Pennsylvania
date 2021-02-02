@@ -1,0 +1,182 @@
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+# Import Data
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(readxl)
+library(janitor)
+
+fhb_spe1<- read_excel("data/dat-isolates.xlsx")
+
+
+```
+
+
+# Toxin type frequency
+
+```{r}
+## Frequency of genotypes
+
+fhb_spe1 %>% 
+  filter(tri!="NA",
+         year!="2012") %>% 
+  tabyl(tri) 
+
+
+### 2018
+
+tri_2018 <- fhb_spe1 %>%
+  filter(year =="2018") %>% 
+  filter(tri!="NA")
+
+tri_2018 %>%
+  tabyl(location, tri, year) 
+
+
+### 2019
+
+tri_2019 <- fhb_spe1 %>%
+  filter(year =="2019") %>% 
+  filter(tri!="NA")
+
+tri_2019 %>%
+  tabyl(location, tri, year) 
+
+
+### 2012
+
+tri_2012 <- fhb_spe1 %>%
+  filter(year =="2012") %>% 
+  filter(tri!="NA")
+
+tri_2012 %>%
+  tabyl(year, tri) 
+
+
+```
+
+## Independence tests
+
+### Toxin type vs. Year
+
+```{r}
+tri_year <- fhb_spe1 %>% 
+  filter(tri!="NA",
+         year!="2012") %>% 
+  tabyl(tri, year) 
+
+fisher.test(tri_year, simulate.p.value = TRUE)
+
+# No significant association between trichothecene genotype and year of sampling.
+```
+
+
+### Toxin type vs. location - 2018
+
+```{r}
+tri_county_2018 <- fhb_spe1 %>% 
+  filter(year == "2018") %>%
+  filter(tri!="NA") %>%
+  tabyl(county, tri)
+
+fisher.test(tri_county_2018, simulate.p.value = TRUE)
+
+# Significant association between trichothecene genotype and sampled location in 2018. 
+```
+
+
+### Toxin type vs. location - 2019
+
+```{r}
+tri_county_2019 <- fhb_spe1 %>% 
+  filter(year == "2019") %>%
+  filter(tri!="NA") %>%
+  tabyl(county, tri)
+
+fisher.test(tri_county_2019, simulate.p.value = TRUE)
+
+# No significant association between trichothecene genotype and sampled location in 2019. 
+```
+
+
+### Toxin type vs. host - 2018
+
+```{r}
+host_tri_2018 <- fhb_spe1 %>%
+  filter(year == "2018") %>%
+  filter(tri!="NA") %>%
+  tabyl(crop, tri)
+
+
+chisq.test(host_tri_2018)
+fisher.test(host_tri_2018, simulate.p.value = TRUE)
+
+# No significant association between trichothecene genotype and sampled host in 2018. 
+```
+
+### Toxin type vs. host - 2019
+
+```{r}
+host_tri_2019 <- fhb_spe1 %>%
+  filter(year == "2019") %>%
+  filter(tri!="NA") %>%
+  tabyl(crop, tri)
+
+
+fisher.test(host_tri_2019, simulate.p.value = TRUE)
+
+# No significant association between trichothecene genotype and sampled host in 2019. 
+```
+
+
+# FGSC frequency
+
+```{r}
+## Frequency of FGSC members
+
+fhb_spe1 %>% 
+  filter(Fg_16!="NA") %>% 
+  tabyl(Fg_16)
+
+### 2018
+
+spc_2018 <- fhb_spe1 %>%
+  filter(Fg_16!="NA") %>% 
+  filter(year =="2018")
+
+spc_2018 %>%
+  tabyl(Fg_16)
+
+
+### 2019
+
+spc_2019 <- fhb_spe1 %>%
+  filter(Fg_16!="NA") %>% 
+  filter(year =="2019")
+
+spc_2019 %>%
+  tabyl(Fg_16)
+
+
+```
+
+
+# Non-FGSC frequency
+
+```{r}
+## TEF gene
+
+fhb_spe1 %>%
+  filter(year!="2012",
+         TEF!="NA"  ,
+         TEF!="Fusarium graminearum",
+         TEF!="Unidentified") %>%
+  tabyl(TEF)
+
+
+```
+

@@ -1,0 +1,4 @@
+"0","# Summary statistics"
+"0","mycelium1 %>%"
+"0","  group_by(tri) %>%"
+"0","  get_summary_stats(mgr, type = ""mean_sd"")"

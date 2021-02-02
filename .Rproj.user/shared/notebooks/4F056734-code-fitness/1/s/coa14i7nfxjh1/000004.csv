@@ -1,0 +1,6 @@
+"0",""
+"0",""
+"0","# Identify outliers by groups"
+"0","ascospore1 %>%"
+"0","  group_by(tri) %>%"
+"0","  identify_outliers(ascospore) # There were no extreme outliers."

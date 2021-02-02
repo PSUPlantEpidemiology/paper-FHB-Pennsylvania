@@ -1,0 +1,3 @@
+"0","conidia1 <- conidia %>%"
+"0","  group_by(experiment, isolate, tri, rep) %>% summarize(spores = mean(conc_spores))"
+"0",""

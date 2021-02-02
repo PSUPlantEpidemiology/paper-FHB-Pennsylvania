@@ -1,0 +1,5 @@
+"0",""
+"0","peritecia1 = peritecia %>%"
+"0","  gather(""Day 3"", ""Day 6"", key = day, value = percentage) %>% "
+"0","  arrange(isolate)"
+"0",""

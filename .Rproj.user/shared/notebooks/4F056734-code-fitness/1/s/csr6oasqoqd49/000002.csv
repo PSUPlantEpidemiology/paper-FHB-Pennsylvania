@@ -1,0 +1,6 @@
+"0","## Metconazole"
+"0","ec50_met <- ec50 %>%"
+"0","  filter(fungicide ==""Metconazole"")"
+"0",""
+"0","ec50_met %>%"
+"0","  get_summary_stats(Estimate, type = ""full"")"
